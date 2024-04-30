@@ -1,6 +1,6 @@
 # uAnalyze for HRM
 
-uAnalyze is a web-based application for comparison and overlay of experimentally obtained high resolution melting data and theory based melting prediction.  
+uAnalyze is a web-based application for comparison and overlay of experimentally obtained high resolution melting data and theory based melting prediction.  Fun project with D3, Boostrap and Javascript for the math/IP required for analysis.
 
 The application was rebuilt in 2020 however you may find the original publication (IEEE) here: https://www.computer.org/csdl/journal/tb/2012/06/ttb2012061805/13rRUxC0SCy.
 
