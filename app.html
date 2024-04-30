@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>uAnalyze v2.1 </title>
+<meta charset="utf-8">
+<script src="js/d3.min.js"></script>
+<script src="js/normalize.js"></script>
+<script src="js/blob.js"></script>
+<script src="js/FileSaver.min.js"></script>
+<script src="js/savGol.js"></script>
+<script src="js/uAnalyze.js"></script>
+
+
+    <link rel="stylesheet" href="css/boots.css" media="screen">
+    <link rel="stylesheet" href="css/boots.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+<style>
+
+
+
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #eee;
+  shape-rendering: crispEdges;
+}
+
+.x.axis path {
+  display: none;
+}
+
+.line {
+  fill: none;
+  stroke-width: 1.5px;
+}
+.xrule line, .yrule line {
+  stroke: #eee;
+}
+.brush .extent {
+  stroke: #fff;
+  fill-opacity: .125;
+  shape-rendering: crispEdges;
+}
+.label{
+	font: 18px sans-serif;
+}
+
+.infile{
+	width: 300px;
+}
+.legend{
+	width: 280px;
+	padding-left: 2px;
+	height: 300px;
+	overflow-y: scroll;
+}
+.graph{/*should be left column*/
+	width: 0px;
+	height: 320px;
+}
+.right_column{
+	float:right;
+}
+.left_column{
+	float: left;
+	width: 650px;
+	padding-bottom: 10px;
+}
+.graphdiv{
+	width: 950px;
+}
+.lowgraph{
+	position: absolute;
+	top: 340px;
+	height: 40px;
+}
+.sequence_left{
+	width: 280px;
+}
+.sequence_input{
+	height: 60px;
+	width:280px;
+	resize:none;
+	font: 14px sans-serif;
+}
+.sequence_params{
+	left: 350px;
+}
+.melt_predict{
+	padding-top:-10px;
+}
+.servicemark{
+	font: 12px sans-serif;
+	color:#D6D6D6;
+}
+
+
+.shock{
+	
+	color:#74AD1B;
+}
+.awe{
+	
+	color:#0375B4;
+}
+.iris{
+ color:#007849;
+}
+.evening{
+ color:#262228;
+}
+.sunflowers{
+ color:#FFCE00;
+
+}
+
+.hidden{
+	display: none;
+}
+.offset_legend{
+	width:100px;
+	float:right;
+	border-left-style:dotted;
+}
+.legend_head_left{
+	width:200px;
+	float:left;
+}
+.legend_name{
+	width:220px;
+	padding: 0px 0px 0px 0px;
+}
+.norm_fail{
+	background-color:#ddd;
+}
+.legend_table{
+	border: 0px;
+	border-spacing: 0px;
+	padding: 0px 0px 0px 0px;
+}
+</style>
+<body onload="initialize()">
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="#"><i class="fa fa-area-chart shock"></i> uAnalyze<sup><span class='servicemark'> sm</span></sup> <sub>v2.1</sub></a>
+    </div>
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav">
+        <li class="active"><a href="#" data-toggle="modal" data-target="#myModal">ABOUT</a></li>
+        <li ><a href="#" data-toggle="modal" data-target="#myModal2">DISCLAIMER</a></li>
+        <li><a href="ua_user_guide.pdf" target="_blank">USER GUIDE</a></li>
+           <li><a href="vid.html" target="_blank">VIDEO TUTORIAL</a></li>
+        <li><a href="http://www.computer.org/csdl/trans/tb/2012/06/ttb2012061805-abs.html" target="_blank">PUBLICATION</a></li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="https://dna-utah.org" target="_blank">dna-utah.org</a></li>
+      </ul>
+    </div>
+
+
+
+    </div>
+</nav>
+
+
+
+<div id="bodydiv">
+ 
+    
+       <table class='table table-striped'>
+        <tr>
+        <td>
+            
+  		<table>
+  			<tr>
+  				<td><select id="file_select" onchange="fileTypeSelected()" style="width: 120px;">
+		<option value="AutoDetect">Auto-Detect</option>
+		<option value="Generic">Generic</option>
+		<option value="HR1">HR1</option>
+		<option value="LS32">LS32</option>
+		<option value="LC480">LC480</option>
+		<option value="LC96">LC96</option>
+		<option value="LS96">LS96/CFX96</option>
+		<option value="Rotorgene">Rotorgene</option>
+		<option value="QuantStudio">QuantStudio</option>
+        <option value="Absorbance">Absorbance</option>
+        
+		
+	</select></td>
+  				<td style="padding: 5px;"><input type="file" class="infile" name="file[]" value="Upload vs2" onchange='openMultipleFiles(event)' multiple width='50px'></input></td>
+  			 
+                       <td style="padding: 5px;">
+    <select id="sample_select" onchange="sample_call()">
+		<option value="Load Demo Files" selected>Load Demo Files&nbsp;</option>
+		<option>-------------</option>
+		<option value="hetcomp">WT, Het and Homozygous&nbsp;&nbsp;</option>
+		<option value="predcomp">Predicted to Experimental&nbsp;</option>
+	</select>
+
+            </td>
+           <td style="padding: 5px;">
+             
+            <section >
+                
+  <div class="row">
+       <div class="col-lg-12">
+     <div class="button-group">
+        <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown"><i class="fa fa-gears awe" aria-hidden="true"></i>
+
+ Analysis Options <span class="caret"></span></button>
+<ul class="dropdown-menu">
+    <li><label>Normalization</label></li>
+   <li><label><input type="radio" id="normalize_checkbox" name="normalizeRadio" onclick="drawModified()">Baseline</input></label></li>
+                    <li ><label><input type="radio" id="normalize_exp_checkbox" name="normalizeRadio" onclick="drawModified()" >Exponential</input></label></li>
+                <li><label>- - - - - - - - - -</label></li>
+				<li><label><input type="checkbox" id="difference_checkbox" onclick="drawModified()">Difference</input></label></li>
+                <li><label><input type="checkbox" id="derivative_checkbox" onclick="drawModified()">Derivative</input></label>  </li> 
+                <li><label><input type="checkbox" id="overlay_checkbox" disabled onclick="drawModified()">Overlay</input></label></li>
+</ul>
+  </div>
+</div>
+  </div>
+
+
+
+                
+        </section> 
+
+            </td>
+            
+
+           
+        </tr>
+        
+        
+        </table>
+   
+
+	
+<hr>
+	
+	<div id="melt_list"></div>
+	<div class="graphdiv">
+		<div class="right_column">
+			<h6><i class="fa fa-arrow-right awe" aria-hidden="true"></i> Legend</h6>
+			<!--<div id="legend_header" class="hidden">-->
+				<div class = "legend_head_left">Sample Name</div>
+				<div class = "legend_head_right" id="right_legend_head">2D Offset</div>
+			<!--</div>-->
+			<div id="legend" class="legend"></div>
+			<div align='center'>
+			<select style="width: 180px;" id="reference_select" onchange="drawModified()" title="A reference curve is needed when using overlay and calculating 2D Offset">
+				<option >Select Reference Curve</option>
+			</select>
+			<br>
+			<button onclick="selectall()">Show All</button>
+			<button onclick="selectnone()">Show None</button>
+			<button onclick="removeall()">Delete All</button>
+
+			</div>
+			<hr>
+			<div id="melt_predict" class="melt_predict">
+				<div class="sequence_left">
+                    <table>
+						<tr><td>
+					<button id='plusbutton' onclick='hideme();'>+</button><button id='minusbutton' onclick='hideme();' style="display:none">-</button></td><td><h6>&nbsp; Add Predicted Curve</h6><td>
+					</tr>
+
+					</table>
+                        <textarea style="display:none" id="sequence_input" class="sequence_input" placeholder="Insert sequence here (A,G,C,Ts only)"></textarea>
+				</div>
+				<div class="sequence_params" id='seqparams' style="display:none">
+					Reaction Conditions<br>
+					<table>
+						<tr>
+							<td>Mono+: <input type="text" size=3 id="mono_param" value=20></input></td><td>Free Mg++: <input type="text" size=3 id="mg_param" value=2.2></input></td>
+						</tr>
+						<tr>
+							<td>DMSO%: <input type="text" size=3 id="dmso_param" value=0></input></td><td></td>
+						</tr>
+						<tr>
+							<td>Curve Name</td><td><input type="text" size=15 id="name_input" value="Prediction1"></input></td>
+						</tr>
+
+					</table>
+					
+
+					<br>
+					<button id="umelt_add" onclick="add_uMelt_curve()"><i class="fa fa-plus"></i> Add Curve</button>
+				</div>
+			</div>
+		</div>
+	
+		<div id="raw_out" class="graph"></div>
+		<div id="mod_out" class="graph"></div>
+		<br>
+		<div id="cursor_io" class="left_column">
+			<table class='table table-striped'>
+				<tr >
+					<td>Cursors - 
+			Low: <input type="text" size=4 id="low_cursor" onchange="changeCursors()" />
+			High: <input type="text" size=4 id="high_cursor" onchange="changeCursors()" /></td>
+					<td>File name: <input type="text" id="filename_input" value="meltcurves.csv" />
+			<button id="save_button" onclick="saveCurves()"><i class="fa fa-save"></i> Save</button></td>
+				</tr>
+			</table>
+
+			
+			
+		</div> 
+	</div>
+</div>
+
+
+
+
+
+<div id="debugout1"></div>
+<div id="debugout2"></div>
+<div id="debugout3"></div>
+<div id="debugout4"></div>
+
+
+<!-- Modal -->
+<div id="myModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">About uAnalyze Express</h4>
+      </div>
+      <div class="modal-body">
+        <p>uAnalyze v2.1 is the new version of uAnalyze provided by dna-utah.org.  Questions and feedback can be directed to zach@dna-utah.org.  </p>
+      </div>
+      <div class="modal-footer">
+
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- Modal -->
+<div id="myModal2" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Disclaimer for uAnalyze</h4>
+      </div>
+      <div class="modal-body">
+        <p>The generation of actual melt data may be covered by U.S. Patent Nos. 7,582,429; 7,803,551; 8,068,992; 8,093,002; 8,296,074; 9,273,346; and other U.S. and foreign patents and patent applications owned by the University of Utah Research Foundation and licensed to BioFire Defense, LLC. If your PCR instrument is not licensed under these patents, please contact Jill Powlick at BioFire (jill.powlick@biofiredefense.com) for sublicensing information. </p>
+      </div>
+      <div class="modal-footer">
+
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
+-->
+
+<!--<script src="html2canvas.js"></script>-->
+<!--<script src="canvas2image.js"></script>-->
+<script type="text/javascript">
+
+
+
+function download(filename, text) {
+    var pom = document.createElement('a');
+    pom.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+    pom.setAttribute('download', filename);
+
+    if (document.createEvent) {
+        var event = document.createEvent('MouseEvents');
+        event.initEvent('click', true, true);
+        pom.dispatchEvent(event);
+    }
+    else {
+        pom.click();
+    }
+}
+/*
+Display
+initialize() - Display empty graphs
+selectall()
+selectnone()
+changeCursors() - Function called when cursors are manually changed by inputting numbers
+color() - (attempts to) return a unique color given an index
+updateLegend() - draws legend
+changeLegend() - toggle visibility of curve i
+display_graph() - main function for displaying graphs
+drawModified() - modifies the data before displaying it with the above function. This is the refresh function of the brush
+
+Parsing
+parseGeneric()
+parseVS2()
+parseLS32()
+parseRotorgene()
+parseLC480()
+parse_uMelt() - Take uMelt xml and parse it into a data structure
+add_uMelt_curve() - Calls uMelt and adds it as a curve
+fileRead() - takes a file, puts it in the right parsing funciton and adds the curve(s)
+isDNA()
+openMultipleFiles()
+dataToString()
+saveCurves()
+exportStr() **dead code**
+strip()
+
+Math
+calculateSmoothSize() - data is smoothed based on density of array
+smoothData()
+calculate_2d_offset()
+average_overlay()
+sgolay_overlay()
+sgolay()
+getNearestIndex()
+negDerivative()
+*/
+</script>
+     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script> 
+    <script src="js/bootstrap.js"></script>
+
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-28398796-1');
+</script>
+</body>
+</html>
