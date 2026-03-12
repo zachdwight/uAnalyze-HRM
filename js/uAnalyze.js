@@ -1499,9 +1499,10 @@ function drawModified(){
     var deriv_checkbox = document.getElementById("derivative_checkbox");
     var diff_checkbox = document.getElementById("difference_checkbox");
     var fileOption = document.getElementById("file_select");
+    // Prevent both derivative and difference from being checked simultaneously
     if (deriv_checkbox.checked && diff_checkbox.checked){
-            deriv_checkbox.checked =false;
-        }
+        diff_checkbox.checked = false;
+    }
     if (norm_checkbox.checked && normex_checkbox.checked){
             //normex_checkbox.checked =false;
         }
@@ -1691,9 +1692,9 @@ function drawModified(){
 		ytext_mod.attr("x", helicity_label_align_x)
 			.text("Helicity (%)");
 	}
-    if (document.getElementById("difference_checkbox").checked){
-		ytext_mod.attr("x", helicity_derivitave_label_align_x)
-			.text("Î” Helicity %");
+    if (document.getElementById(“difference_checkbox”).checked){
+		ytext_mod.attr(“x”, helicity_derivitave_label_align_x)
+			.text(“\u0394 Helicity %”);
 	}
     
 	updateLegend();
