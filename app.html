@@ -203,27 +203,6 @@
            <td style="padding: 5px;">
              
             <section >
-              <button type="button" class="btn btn-default btn-sm" onclick="toggleAnalysisOptions()"><i class="fa fa-gears awe" aria-hidden="true"></i> Analysis Options</button>
-
-              <div id="analysisOptionsPanel" style="display:none; padding: 10px; border: 1px solid #ddd; background: #f9f9f9; border-radius: 4px; margin-top: 5px;">
-                <div style="margin-bottom: 8px;">
-                  <strong>Normalization:</strong><br>
-                  <label style="margin-right: 15px;"><input type="radio" id="normalize_checkbox" name="normalizeRadio" onclick="drawModified()"> Baseline</label>
-                  <label><input type="radio" id="normalize_exp_checkbox" name="normalizeRadio" onclick="drawModified()"> Exponential</label>
-                </div>
-                <div style="margin-bottom: 8px;">
-                  <label style="margin-right: 15px;"><input type="checkbox" id="difference_checkbox" onclick="drawModified()"> Difference</label>
-                  <label style="margin-right: 15px;"><input type="checkbox" id="derivative_checkbox" onclick="drawModified()"> Derivative</label>
-                  <label><input type="checkbox" id="overlay_checkbox" disabled onclick="drawModified()"> Overlay</label>
-                </div>
-              </div>
-
-              <div style="padding: 5px; display: inline-block; margin-left: 10px;">
-                <label style="margin-right: 10px;">Clustering (k): <input type="number" id="clustering_k_input" min="1" max="50" value="3" style="width: 50px;"></input></label>
-                <button type="button" class="btn btn-default btn-sm" onclick="performClustering()" title="Group similar curves"><i class="fa fa-object-group"></i> Cluster</button>
-                <button type="button" class="btn btn-default btn-sm" onclick="clearClustering()" title="Clear clustering"><i class="fa fa-times"></i> Clear</button>
-              </div>
-            </section>
 
 
                 
@@ -245,6 +224,25 @@
 	<div id="melt_list"></div>
 	<div class="graphdiv">
 		<div class="right_column">
+			<h6><i class="fa fa-gears awe" aria-hidden="true"></i> Analysis Options</h6>
+			<div style="padding: 8px; border: 1px solid #ddd; background: #f9f9f9; border-radius: 4px; margin-bottom: 15px;">
+				<div style="margin-bottom: 10px;">
+					<strong>Normalization:</strong><br>
+					<label style="margin-right: 15px;"><input type="radio" id="normalize_checkbox" name="normalizeRadio" onclick="drawModified()"> Baseline</label>
+					<label><input type="radio" id="normalize_exp_checkbox" name="normalizeRadio" onclick="drawModified()"> Exponential</label>
+				</div>
+				<div style="margin-bottom: 10px;">
+					<label style="margin-right: 15px;"><input type="checkbox" id="difference_checkbox" onclick="drawModified()"> Difference</label>
+					<label style="margin-right: 15px;"><input type="checkbox" id="derivative_checkbox" onclick="drawModified()"> Derivative</label>
+					<label><input type="checkbox" id="overlay_checkbox" disabled onclick="drawModified()"> Overlay</label>
+				</div>
+				<div style="border-top: 1px solid #ddd; padding-top: 8px; margin-top: 8px;">
+					<strong>Clustering:</strong><br>
+					<label style="display: block; margin-bottom: 8px;">k: <input type="number" id="clustering_k_input" min="1" max="50" value="3" style="width: 50px;"></label>
+					<button type="button" class="btn btn-default btn-xs" onclick="performClustering()"><i class="fa fa-object-group"></i> Cluster</button>
+					<button type="button" class="btn btn-default btn-xs" onclick="clearClustering()" style="margin-left: 5px;"><i class="fa fa-times"></i> Clear</button>
+				</div>
+			</div>
 			<h6><i class="fa fa-arrow-right awe" aria-hidden="true"></i> Legend</h6>
 			<!--<div id="legend_header" class="hidden">-->
 				<div class = "legend_head_left">Sample Name</div>

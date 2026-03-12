@@ -2650,16 +2650,6 @@ function hideme(){
 
 }
 
-// Toggle Analysis Options panel visibility
-function toggleAnalysisOptions() {
-	var panel = document.getElementById('analysisOptionsPanel');
-	if (panel.style.display === 'none') {
-		panel.style.display = 'block';
-	} else {
-		panel.style.display = 'none';
-	}
-}
-
 // ============== HIERARCHICAL CLUSTERING FUNCTIONS ==============
 
 // Compute euclidean distance between two curves
