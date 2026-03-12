@@ -1541,6 +1541,8 @@ function drawModified(){
 	if (brush_manually_set && !brush.empty()){
 		lowslice = getNearestIndex(brush.extent()[0],rx[0]);
 		highslice = getNearestIndex(brush.extent()[1],rx[0]);
+		if (lowslice == -1)
+			lowslice = 0;
 		if (highslice == -1)
 			highslice = rx[0].length-1;
 		brushextent = brush.extent();
