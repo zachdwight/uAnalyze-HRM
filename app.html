@@ -50,10 +50,27 @@
 	width: 300px;
 }
 .legend{
-	width: 280px;
-	padding-left: 2px;
-	height: 300px;
-	overflow-y: scroll;
+	width: 100%;
+	padding: 8px 0;
+	height: 350px;
+	overflow-y: auto;
+	border-top: 1px solid #e0e0e0;
+	padding-top: 12px;
+	margin-top: 12px;
+}
+.legend::-webkit-scrollbar {
+	width: 6px;
+}
+.legend::-webkit-scrollbar-track {
+	background: #f1f1f1;
+	border-radius: 3px;
+}
+.legend::-webkit-scrollbar-thumb {
+	background: #ccc;
+	border-radius: 3px;
+}
+.legend::-webkit-scrollbar-thumb:hover {
+	background: #999;
 }
 .graph{/*should be left column*/
 	width: 0px;
@@ -61,14 +78,29 @@
 }
 .right_column{
 	float:right;
+	width: 310px;
+	background: #fff;
+	border: 1px solid #e0e0e0;
+	border-radius: 6px;
+	padding: 15px;
+	margin-left: 20px;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+.right_column h6 {
+	margin-top: 0;
+	margin-bottom: 12px;
+	font-size: 14px;
+	font-weight: 600;
+	color: #333;
+	border-bottom: 1px solid #e0e0e0;
+	padding-bottom: 8px;
 }
 .left_column{
 	float: left;
-	width: 650px;
 	padding-bottom: 10px;
 }
 .graphdiv{
-	width: 950px;
+	overflow: auto;
 }
 .lowgraph{
 	position: absolute;
@@ -129,15 +161,58 @@
 }
 .legend_name{
 	width:220px;
-	padding: 0px 0px 0px 0px;
+	padding: 4px 0;
+	font-size: 12px;
+}
+.legend_head_left {
+	font-weight: 600;
+	font-size: 11px;
+	color: #666;
+	margin-bottom: 8px;
+}
+.legend_head_right {
+	font-weight: 600;
+	font-size: 11px;
+	color: #666;
 }
 .norm_fail{
-	background-color:#ddd;
+	background-color:#fff3cd;
+	opacity: 0.7;
 }
 .legend_table{
 	border: 0px;
 	border-spacing: 0px;
 	padding: 0px 0px 0px 0px;
+	width: 100%;
+}
+.legend_buttons {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+	margin-top: 12px;
+	padding-top: 12px;
+	border-top: 1px solid #e0e0e0;
+}
+.legend_buttons button {
+	padding: 6px 10px !important;
+	font-size: 12px !important;
+	border: 1px solid #ddd !important;
+	background: #f8f8f8 !important;
+	border-radius: 4px !important;
+	cursor: pointer;
+	transition: all 0.2s ease;
+}
+.legend_buttons button:hover {
+	background: #f0f0f0 !important;
+	border-color: #bbb !important;
+}
+.legend_buttons select {
+	padding: 6px 8px;
+	font-size: 12px;
+	border: 1px solid #ddd;
+	border-radius: 4px;
+	background: #fff;
+	margin-bottom: 6px;
 }
 </style>
 <body onload="initialize()">
@@ -225,7 +300,7 @@
 	<div class="graphdiv">
 		<div class="right_column">
 			<h6><i class="fa fa-gears awe" aria-hidden="true"></i> Analysis Options</h6>
-			<div style="padding: 8px; border: 1px solid #ddd; background: #f9f9f9; border-radius: 4px; margin-bottom: 15px;">
+			<div style="padding: 12px; border: 1px solid #e0e0e0; background: #fafafa; border-radius: 5px; margin-bottom: 15px;">
 				<div style="margin-bottom: 10px;">
 					<strong>Normalization:</strong><br>
 					<label style="margin-right: 15px;"><input type="radio" id="normalize_checkbox" name="normalizeRadio" onclick="drawModified()"> Baseline</label>
@@ -249,15 +324,13 @@
 				<div class = "legend_head_right" id="right_legend_head">2D Offset</div>
 			<!--</div>-->
 			<div id="legend" class="legend"></div>
-			<div align='center'>
-			<select style="width: 180px;" id="reference_select" onchange="drawModified()" title="A reference curve is needed when using overlay and calculating 2D Offset">
-				<option >Select Reference Curve</option>
-			</select>
-			<br>
-			<button onclick="selectall()">Show All</button>
-			<button onclick="selectnone()">Show None</button>
-			<button onclick="removeall()">Delete All</button>
-
+			<div class="legend_buttons">
+				<select id="reference_select" onchange="drawModified()" title="A reference curve is needed when using overlay and calculating 2D Offset">
+					<option>Select Reference Curve</option>
+				</select>
+				<button onclick="selectall()">Show All</button>
+				<button onclick="selectnone()">Show None</button>
+				<button onclick="removeall()">Delete All</button>
 			</div>
 			<hr>
 			<div id="melt_predict" class="melt_predict">
