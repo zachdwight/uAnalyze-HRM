@@ -928,6 +928,9 @@ var current_fname;
 var cluster_assignments=[]; //which cluster each curve belongs to
 var clustering_active=false;
 var cluster_count=0;
+
+//Brush/cursor variables
+var brush_manually_set = false; //track if user has manually set the cursor region
 //var opened_files=0;
 function selectall(){
 	for (var i=0; i<curve_names.length; i++){
@@ -951,6 +954,7 @@ function removeall(){
 		cluster_assignments=[];
 		clustering_active=false;
 		cluster_count=0;
+		brush_manually_set=false;
 		brush.clear();
 		brushextent=null;
 		var reference_select = document.getElementById("reference_select");
@@ -1431,7 +1435,10 @@ function display_graph(xdata,ydata,outdiv){ //xy
 		//Brush for cursors
 		brush = d3.svg.brush()
 	    	.x(raw_x)
-   			.on("brushend", drawModified);
+   			.on("brushend", function(){
+   				brush_manually_set = true;
+   				drawModified();
+   			});
 
 		//append the brush to one of the xrules
 		vis.select("g.xrule")//.xrules.append("g")
@@ -1531,7 +1538,7 @@ function drawModified(){
 		norm_alert = false;
 	}*/
 	//Trim areas of the curve where cursors were input
-	if (!brush.empty()){
+	if (brush_manually_set && !brush.empty()){
 		lowslice = getNearestIndex(brush.extent()[0],rx[0]);
 		highslice = getNearestIndex(brush.extent()[1],rx[0]);
 		if (highslice == -1)
