@@ -1539,7 +1539,7 @@ function drawModified(){
 	}*/
 	//Trim areas of the curve where cursors were input
 	// Check if brush exists and has been set by user
-	if (brush && brush.extent() && !brush.empty()){
+	if (brush && !brush.empty()){
 		lowslice = getNearestIndex(brush.extent()[0],rx[0]);
 		highslice = getNearestIndex(brush.extent()[1],rx[0]);
 		if (lowslice == -1)
