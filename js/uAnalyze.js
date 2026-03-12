@@ -1582,9 +1582,8 @@ function drawModified(){
 						mx[i] = rx[i].slice(lowslice,highslice);
 					}
 				}else{
-					// No normalization: use full data range, don't trim by brush extent
-					mx[i] = rx[i].slice();
-					my[i] = ry[i].slice();
+					mx[i] = rx[i].slice(lowslice,highslice);
+					my[i] = ry[i].slice(lowslice,highslice);
 				}
 			}else{
 				mx[i] = rx[i].slice();
