@@ -2640,7 +2640,9 @@ function truncateIfLong(s){
 var hidey1 = document.getElementById('seqparams');
 var hidey2 = document.getElementById('sequence_input');
 var hidey3 = document.getElementById('minusbutton');
-hidey1.style.display = 'none';hidey2.style.display = 'none';hidey3.style.display = 'none';
+if (hidey1) hidey1.style.display = 'none';
+if (hidey2) hidey2.style.display = 'none';
+if (hidey3) hidey3.style.display = 'none';
 
 function hideme(){
 
