@@ -109,20 +109,17 @@ var color_array = [
 
 //Display empty graphs
 function initialize(){
-	console.log("initialize() called");
 	//Remove cursor numbers
 	document.getElementById("low_cursor").value="";
 	document.getElementById("high_cursor").value="";
 	document.getElementById("sample_select").selectedIndex=0;
 	try {
 		display_graph([],[],RAW_OUT_DIV);//won't work
-		console.log("display_graph RAW_OUT called successfully");
 	} catch(e) {
 		console.error("Error in display_graph RAW: " + e);
 	}
 	try {
 		display_graph([],[],MOD_OUT_DIV);
-		console.log("display_graph MOD_OUT called successfully");
 	} catch(e) {
 		console.error("Error in display_graph MOD: " + e);
 	}
@@ -1233,7 +1230,6 @@ var ytext_mod; //the y-axis text that changes with using derivative
 var minY=0;
 //use d3 to display graph with x and y arrays
 function display_graph(xdata,ydata,outdiv){ //xy
-	console.log("display_graph called with outdiv: " + outdiv + ", xdata length: " + xdata.length);
 	//outdiv default to "mod_out"
 	outdiv = typeof outdiv !== 'undefined' ? outdiv : MOD_OUT_DIV;
 	var out = "#" + outdiv;
@@ -1289,14 +1285,15 @@ function display_graph(xdata,ydata,outdiv){ //xy
 	var x = d3.scale.linear().domain([minx, maxx]).range([0,w]),
 		y = d3.scale.linear().domain([minY, maxy]).range([h,0]);
 
-	console.log("Creating SVG in " + out + " with dimensions " + (w + xoff) + "x" + (h + yoff));
-
 	//Initialize svg
 	var vis = d3.select(out)
 		.append("svg:svg")
 		.attr("width", w + xoff)
 		.attr("height", h + yoff)
-		.style("border", "1px solid red")
+		.style("background-color", "#fff")
+		.style("border", "1px solid #e0e0e0")
+		.style("border-radius", "6px")
+		.style("box-shadow", "0 1px 3px rgba(0, 0, 0, 0.08)")
 		.append("svg:g")
 		.attr("transform", "translate(" + xbuffer + "," + ybuffer  + ")");
 
