@@ -1710,12 +1710,12 @@ function drawModified(){
 		ytext_mod.attr("x", helicity_derivitave_label_align_x)
 			.text("-d(Helicity)/d(Temp)");
 	}else if ( (normex_checkbox.checked || norm_checkbox.checked) && !brush.empty()){
-		ytext_mod.attr(“x”, helicity_label_align_x)
-			.text(“Helicity (%)”);
+		ytext_mod.attr("x", helicity_label_align_x)
+			.text("Helicity (%)");
 	}
-    if (document.getElementById(“difference_checkbox”).checked){
-		ytext_mod.attr(“x”, helicity_derivitave_label_align_x)
-			.text(“\u0394 Helicity %”);
+	if (document.getElementById("difference_checkbox").checked){
+		ytext_mod.attr("x", helicity_derivitave_label_align_x)
+			.text("\u0394 Helicity %");
 	}
 
 	updateLegend();
