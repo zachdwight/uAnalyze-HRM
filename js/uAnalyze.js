@@ -1593,13 +1593,13 @@ function drawModified(){
 						for (var j=0; j<my[i].length; j++){
 							//TODO: remove curve from list if normalization fails
 							if (my[i][j] > NORM_FAIL_UPPER || my[i][j] < NORM_FAIL_LOWER){
-								my[i] = new Array(my[i].length).fill(0);
-								mx[i] = new Array(mx[i].length).fill(0);
+								my[i] = [];
+								mx[i] = [];
 								break;
 							}
 						}
 					}else{
-						my[i] = [0]*my[i].length;
+						my[i] = new Array(my[i].length).fill(0);
 						mx[i] = rx[i].slice(lowslice,highslice);
 					}
 				}else{
