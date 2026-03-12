@@ -1538,7 +1538,7 @@ function drawModified(){
 		norm_alert = false;
 	}*/
 	//Trim areas of the curve where cursors were input
-	if (brush_manually_set && brush && !brush.empty()){
+	if (brush_manually_set && !brush.empty()){
 		lowslice = getNearestIndex(brush.extent()[0],rx[0]);
 		highslice = getNearestIndex(brush.extent()[1],rx[0]);
 		if (lowslice == -1)
