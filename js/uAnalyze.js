@@ -2678,13 +2678,16 @@ function hideme(){
 
 // Compute euclidean distance between two curves
 function euclideanDistance(curve1, curve2) {
+	// Using Chebyshev distance (L-infinity norm): max absolute difference
 	if (curve1.length !== curve2.length) return Infinity;
-	var sum = 0;
+	var maxDiff = 0;
 	for (var i = 0; i < curve1.length; i++) {
-		var diff = curve1[i] - curve2[i];
-		sum += diff * diff;
+		var diff = Math.abs(curve1[i] - curve2[i]);
+		if (diff > maxDiff) {
+			maxDiff = diff;
+		}
 	}
-	return Math.sqrt(sum);
+	return maxDiff;
 }
 
 // Compute average linkage distance between two clusters
