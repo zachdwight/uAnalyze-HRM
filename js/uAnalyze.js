@@ -1288,12 +1288,15 @@ function display_graph(xdata,ydata,outdiv){ //xy
 	
 	var x = d3.scale.linear().domain([minx, maxx]).range([0,w]),
 		y = d3.scale.linear().domain([minY, maxy]).range([h,0]);
-	
+
+	console.log("Creating SVG in " + out + " with dimensions " + (w + xoff) + "x" + (h + yoff));
+
 	//Initialize svg
 	var vis = d3.select(out)
 		.append("svg:svg")
 		.attr("width", w + xoff)
 		.attr("height", h + yoff)
+		.style("border", "1px solid red")
 		.append("svg:g")
 		.attr("transform", "translate(" + xbuffer + "," + ybuffer  + ")");
 
