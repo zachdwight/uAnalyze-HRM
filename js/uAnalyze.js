@@ -1222,10 +1222,11 @@ var ytext_mod; //the y-axis text that changes with using derivative
 var minY=0;
 //use d3 to display graph with x and y arrays
 function display_graph(xdata,ydata,outdiv){ //xy
+	console.log("display_graph called with outdiv: " + outdiv + ", xdata length: " + xdata.length);
 	//outdiv default to "mod_out"
 	outdiv = typeof outdiv !== 'undefined' ? outdiv : MOD_OUT_DIV;
 	var out = "#" + outdiv;
-	
+
 	//replace the graph if it's already there
 	document.getElementById(outdiv).innerHTML = "";
 	var maxval = 0,
