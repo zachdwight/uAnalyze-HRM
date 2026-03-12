@@ -109,12 +109,23 @@ var color_array = [
 
 //Display empty graphs
 function initialize(){
+	console.log("initialize() called");
 	//Remove cursor numbers
 	document.getElementById("low_cursor").value="";
 	document.getElementById("high_cursor").value="";
 	document.getElementById("sample_select").selectedIndex=0;
-	display_graph([],[],RAW_OUT_DIV);//won't work
-	display_graph([],[],MOD_OUT_DIV);
+	try {
+		display_graph([],[],RAW_OUT_DIV);//won't work
+		console.log("display_graph RAW_OUT called successfully");
+	} catch(e) {
+		console.error("Error in display_graph RAW: " + e);
+	}
+	try {
+		display_graph([],[],MOD_OUT_DIV);
+		console.log("display_graph MOD_OUT called successfully");
+	} catch(e) {
+		console.error("Error in display_graph MOD: " + e);
+	}
 	fileTypeSelected();
 	document.getElementById("overlay_checkbox").checked = false;
 	document.getElementById("derivative_checkbox").checked = false;
@@ -1699,14 +1710,14 @@ function drawModified(){
 		ytext_mod.attr("x", helicity_derivitave_label_align_x)
 			.text("-d(Helicity)/d(Temp)");
 	}else if ( (normex_checkbox.checked || norm_checkbox.checked) && !brush.empty()){
-		ytext_mod.attr("x", helicity_label_align_x)
-			.text("Helicity (%)");
+		ytext_mod.attr(“x”, helicity_label_align_x)
+			.text(“Helicity (%)”);
 	}
     if (document.getElementById(“difference_checkbox”).checked){
 		ytext_mod.attr(“x”, helicity_derivitave_label_align_x)
 			.text(“\u0394 Helicity %”);
 	}
-    
+
 	updateLegend();
 }
 
