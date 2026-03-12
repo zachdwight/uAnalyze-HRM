@@ -1378,7 +1378,7 @@ function display_graph(xdata,ydata,outdiv){ //xy
 		.attr("text-anchor", "end")
 		.attr("x", (w/2)+temperature_label_align_x)
 		.attr("y", h+temperature_label_align_y)
-		.text("Temperature (ËšC)");
+		.text("Temperature (\u00B0C)");
 	//not sure I like this code, but it's held up
 	if (outdiv == MOD_OUT_DIV){
 		mod_x = x;
