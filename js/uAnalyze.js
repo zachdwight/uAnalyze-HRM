@@ -416,6 +416,19 @@ function sendStat(name,count){
 }
 //(attempts to) return a unique color given an index
 function color(index){
+	// If clustering is active, use cluster assignment
+	if (clustering_active && cluster_assignments[index] !== undefined && cluster_assignments[index] >= 0) {
+		var clusterIdx = cluster_assignments[index];
+		if (clusterIdx < color_array.length) {
+			return color_array[clusterIdx];
+		}
+		var r = (150 * (clusterIdx + 1)) % 255;
+		var g = (120 * (clusterIdx + 1)) % 255;
+		var b = (90 * (clusterIdx + 1)) % 255;
+		return "rgb(" + r + "," + g + "," + b + ")";
+	}
+
+	// Otherwise use curve index
 	if (index < color_array.length){
 		return color_array[index];
 	}
@@ -911,6 +924,10 @@ var curve_names=[]; //names of the files
 var includes=[];
 var predicts=[];
 var current_fname;
+//Clustering variables
+var cluster_assignments=[]; //which cluster each curve belongs to
+var clustering_active=false;
+var cluster_count=0;
 //var opened_files=0;
 function selectall(){
 	for (var i=0; i<curve_names.length; i++){
@@ -931,6 +948,9 @@ function selectnone(){
 function removeall(){
 	if (confirm("Are you sure you want to remove all curves?") == true){
 		rx=[], ry=[], curve_names=[], includes=[], predicts=[];
+		cluster_assignments=[];
+		clustering_active=false;
+		cluster_count=0;
 		brush.clear();
 		brushextent=null;
 		var reference_select = document.getElementById("reference_select");
@@ -1139,7 +1159,11 @@ function updateLegend(){
 			if (includes[i] == 1){
 				text += "checked";
 			}
-			text += ">"+truncateIfLong(curve_names[i])+"</input>";
+			text += ">"+truncateIfLong(curve_names[i]);
+			if (clustering_active && cluster_assignments[i] >= 0) {
+				text += " [Cluster " + (cluster_assignments[i] + 1) + "]";
+			}
+			text += "</input>";
 			if (my[i]==0)
 				text+="</div>";
 			else
@@ -1227,7 +1251,7 @@ function display_graph(xdata,ydata,outdiv){ //xy
 				if (ydata[i][j] > maxy){
 					maxy=ydata[i][j];
 				}
-				if (label_array.length < xdata[i][j].length){
+				if (label_array.length <= j){
 					label_array[j] = parseFloat(xdata[i][j]);
 				
 				}
@@ -1547,8 +1571,8 @@ function drawModified(){
 						for (var j=0; j<my[i].length; j++){
 							//TODO: remove curve from list if normalization fails
 							if (my[i][j] > NORM_FAIL_UPPER || my[i][j] < NORM_FAIL_LOWER){
-								my[i] = 0;
-								mx[i] = 0;
+								my[i] = new Array(my[i].length).fill(0);
+								mx[i] = new Array(mx[i].length).fill(0);
 								break;
 							}
 						}
@@ -2617,11 +2641,169 @@ function hideme(){
         x2.style.display = 'none';
     }
 
-    var x3 = document.getElementById('plusbutton'); 
+    var x3 = document.getElementById('plusbutton');
     if (x3.style.display === 'none') {
         x3.style.display = 'block';
     } else {
         x3.style.display = 'none';
     }
 
+}
+
+// ============== HIERARCHICAL CLUSTERING FUNCTIONS ==============
+
+// Compute euclidean distance between two curves
+function euclideanDistance(curve1, curve2) {
+	if (curve1.length !== curve2.length) return Infinity;
+	var sum = 0;
+	for (var i = 0; i < curve1.length; i++) {
+		var diff = curve1[i] - curve2[i];
+		sum += diff * diff;
+	}
+	return Math.sqrt(sum);
+}
+
+// Compute average linkage distance between two clusters
+function clusterDistance(cluster1, cluster2, data) {
+	var totalDist = 0, count = 0;
+	for (var i = 0; i < cluster1.length; i++) {
+		for (var j = 0; j < cluster2.length; j++) {
+			totalDist += euclideanDistance(data[cluster1[i]], data[cluster2[j]]);
+			count++;
+		}
+	}
+	return count > 0 ? totalDist / count : Infinity;
+}
+
+// Hierarchical agglomerative clustering
+function hierarchicalCluster(data, k) {
+	if (data.length === 0 || k < 1) return [];
+
+	k = Math.min(k, data.length);
+
+	// Initialize: each point is its own cluster
+	var clusters = [];
+	for (var i = 0; i < data.length; i++) {
+		clusters.push([i]);
+	}
+
+	// Merge clusters until we have k clusters
+	while (clusters.length > k) {
+		var minDist = Infinity;
+		var mergeI = 0, mergeJ = 1;
+
+		// Find closest pair of clusters
+		for (var i = 0; i < clusters.length; i++) {
+			for (var j = i + 1; j < clusters.length; j++) {
+				var dist = clusterDistance(clusters[i], clusters[j], data);
+				if (dist < minDist) {
+					minDist = dist;
+					mergeI = i;
+					mergeJ = j;
+				}
+			}
+		}
+
+		// Merge the closest clusters
+		clusters[mergeI] = clusters[mergeI].concat(clusters[mergeJ]);
+		clusters.splice(mergeJ, 1);
+	}
+
+	// Convert cluster assignments to array mapping each data point to cluster ID
+	var assignments = new Array(data.length);
+	for (var i = 0; i < clusters.length; i++) {
+		for (var j = 0; j < clusters[i].length; j++) {
+			assignments[clusters[i][j]] = i;
+		}
+	}
+	return assignments;
+}
+
+// Normalize curves to same length for distance calculation
+function normalizeCurvesForClustering(xdata, ydata, includes) {
+	var normalized = [];
+	var maxLen = 0;
+
+	// Find max length
+	for (var i = 0; i < ydata.length; i++) {
+		if (includes[i] === 1 && ydata[i] && ydata[i].length > maxLen) {
+			maxLen = ydata[i].length;
+		}
+	}
+
+	// Normalize all curves to maxLen via linear interpolation
+	for (var i = 0; i < ydata.length; i++) {
+		if (includes[i] === 1 && ydata[i] && ydata[i].length > 0) {
+			var curve = ydata[i];
+			var interpolated = [];
+			for (var j = 0; j < maxLen; j++) {
+				var pos = (j / maxLen) * (curve.length - 1);
+				var idx = Math.floor(pos);
+				var frac = pos - idx;
+				if (idx >= curve.length - 1) {
+					interpolated.push(curve[curve.length - 1]);
+				} else {
+					interpolated.push(curve[idx] * (1 - frac) + curve[idx + 1] * frac);
+				}
+			}
+			normalized.push(interpolated);
+		} else {
+			normalized.push([]);
+		}
+	}
+	return normalized;
+}
+
+// Perform clustering and redraw
+function performClustering() {
+	var kInput = document.getElementById('clustering_k_input');
+	var k = parseInt(kInput.value);
+
+	if (isNaN(k) || k < 1 || k > curve_names.length) {
+		alert('Please enter a valid k between 1 and ' + curve_names.length);
+		return;
+	}
+
+	// Normalize curves for clustering
+	var normalizedData = normalizeCurvesForClustering(mx, my, includes);
+
+	// Filter to only included curves
+	var includedData = [];
+	var curveIndexMap = [];
+	for (var i = 0; i < normalizedData.length; i++) {
+		if (includes[i] === 1 && normalizedData[i].length > 0) {
+			includedData.push(normalizedData[i]);
+			curveIndexMap.push(i);
+		}
+	}
+
+	if (includedData.length === 0) {
+		alert('No curves to cluster');
+		return;
+	}
+
+	// Perform clustering
+	var assignments = hierarchicalCluster(includedData, k);
+
+	// Map assignments back to original curve indices
+	cluster_assignments = new Array(curve_names.length).fill(-1);
+	for (var i = 0; i < curveIndexMap.length; i++) {
+		cluster_assignments[curveIndexMap[i]] = assignments[i];
+	}
+
+	cluster_count = k;
+	clustering_active = true;
+
+	// Redraw with cluster colors
+	updateLegend();
+	drawModified();
+}
+
+// Clear clustering
+function clearClustering() {
+	clustering_active = false;
+	cluster_assignments = [];
+	cluster_count = 0;
+	updateLegend();
+	drawModified();
 }
