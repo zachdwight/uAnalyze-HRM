@@ -73,8 +73,8 @@
 	background: #999;
 }
 .graph{/*should be left column*/
-	width: 100%;
-	max-width: 900px;
+	flex: 1;
+	min-width: 450px;
 	height: 350px;
 	clear: none;
 	float: left;
@@ -93,15 +93,24 @@
 		height: 300px;
 	}
 }
+@media (max-width: 1100px) {
+	.graph {
+		flex: 1 1 100%;
+		min-width: 100%;
+		margin-right: 0;
+	}
+}
 .right_column{
 	float:right;
 	width: 310px;
+	min-width: 310px;
 	background: #fff;
 	border: 1px solid #e0e0e0;
 	border-radius: 6px;
 	padding: 15px;
 	margin-left: 20px;
 	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+	flex-shrink: 0;
 }
 .right_column h6 {
 	margin-top: 0;
@@ -119,11 +128,30 @@
 .graphdiv{
 	overflow: auto;
 	width: 100%;
+	min-width: 500px;
 	min-height: 700px;
 	background: #f9f9f9;
 	padding: 10px;
 	border-top: 1px solid #ddd;
 	margin-top: 10px;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 20px;
+}
+@media (max-width: 1100px) {
+	.graphdiv {
+		flex-direction: column-reverse;
+	}
+	.right_column {
+		float: none !important;
+		width: 100% !important;
+		margin-left: 0 !important;
+	}
+	.graph {
+		float: none !important;
+		width: 100% !important;
+		margin-right: 0 !important;
+	}
 }
 .lowgraph{
 	position: absolute;
