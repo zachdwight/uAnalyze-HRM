@@ -57,7 +57,7 @@ function updateChartDimensions() {
 	if (container) {
 		var containerWidth = container.offsetWidth;
 		// Set width based on container, leaving room for padding
-		w = Math.max(400, Math.min(containerWidth - 30, 850));
+		w = Math.max(400, containerWidth - 30);
 		// Adjust height based on screen size for responsiveness
 		if (window.innerWidth >= 1600) {
 			h = 400;
