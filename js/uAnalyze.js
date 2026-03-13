@@ -50,6 +50,24 @@ var w = 600, //Width of graph in pixels
 	ybuffer = 20,
 	legend_color_width=10,
 	legend_color_height=10;
+
+// Calculate responsive chart dimensions based on container size
+function updateChartDimensions() {
+	var container = document.getElementById("raw_out");
+	if (container) {
+		var containerWidth = container.offsetWidth;
+		// Set width based on container, leaving room for padding
+		w = Math.max(400, Math.min(containerWidth - 30, 850));
+		// Adjust height based on screen size for responsiveness
+		if (window.innerWidth >= 1600) {
+			h = 400;
+		} else if (window.innerWidth <= 1200) {
+			h = 280;
+		} else {
+			h = 320;
+		}
+	}
+}
 var temperature_label_align_x = 80,
 	temperature_label_align_y = 45;
 var helicity_label_align_y = -24,
@@ -113,6 +131,16 @@ function initialize(){
 	document.getElementById("low_cursor").value="";
 	document.getElementById("high_cursor").value="";
 	document.getElementById("sample_select").selectedIndex=0;
+
+	// Set initial chart dimensions and add resize listener
+	updateChartDimensions();
+	window.addEventListener("resize", function() {
+		updateChartDimensions();
+		if (mx.length > 0) {
+			drawModified();
+		}
+	});
+
 	try {
 		display_graph([],[],RAW_OUT_DIV);//won't work
 	} catch(e) {

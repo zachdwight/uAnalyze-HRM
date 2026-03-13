@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>uAnalyze v2.1 </title>
+    <title>uAnalyze v2.8 </title>
 <meta charset="utf-8">
 <script src="js/d3.min.js"></script>
 <script src="js/normalize.js"></script>
@@ -73,13 +73,25 @@
 	background: #999;
 }
 .graph{/*should be left column*/
-	width: 550px;
-	height: 320px;
+	width: 100%;
+	max-width: 900px;
+	height: 350px;
 	clear: none;
 	float: left;
 	margin-right: 15px;
 	margin-bottom: 15px;
 	padding: 10px;
+	box-sizing: border-box;
+}
+@media (min-width: 1600px) {
+	.graph {
+		height: 450px;
+	}
+}
+@media (max-width: 1200px) {
+	.graph {
+		height: 300px;
+	}
 }
 .right_column{
 	float:right;
@@ -230,7 +242,7 @@
 <nav class="navbar navbar-default">
   <div class="container-fluid">
     <div class="navbar-header">
-      <a class="navbar-brand" href="#"><i class="fa fa-area-chart shock"></i> uAnalyze<sup><span class='servicemark'> sm</span></sup> <sub>v2.1</sub></a>
+      <a class="navbar-brand" href="#"><i class="fa fa-line-chart shock"></i> uAnalyze<sup><span class='servicemark'> sm</span></sup> <sub>v2.8</sub></a>
     </div>
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
