@@ -32,6 +32,6 @@ Reach out to zach@dna-utah.org with any questions about the history of the proje
 
 
 
-<img width="600"  alt="Screenshot 2026-03-13 at 1 33 01 PM" src="https://github.com/user-attachments/assets/4c8532d4-770d-4e12-ab2d-015fb7ba4c32" />
+<img width="800"  alt="Screenshot 2026-03-13 at 1 33 01 PM" src="https://github.com/user-attachments/assets/4c8532d4-770d-4e12-ab2d-015fb7ba4c32" />
 
 
