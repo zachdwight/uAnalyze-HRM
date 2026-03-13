@@ -1782,12 +1782,17 @@ function smoothData(x,y,smoothSize){
 function dataToString(){
 	var length=0, maxlen=0, templen;
 	var names=[], xs=[],ys=[],name;
-	
+
 	for (var i=0; i<mx.length; i++){
 		if (includes[i]==1){
 			//check if fname has a , in it
-			names.push(curve_names[i]+" Temperature");
-			names.push(curve_names[i]+" Fluorescence");
+			var curveName = curve_names[i];
+			// Add cluster name if clustering is active
+			if (clustering_active && cluster_assignments[i] >= 0) {
+				curveName += " [Cluster " + (cluster_assignments[i] + 1) + "]";
+			}
+			names.push(curveName+" Temperature");
+			names.push(curveName+" Fluorescence");
 			xs.push(mx[i]);
 			ys.push(my[i]);
 			length+=1;
