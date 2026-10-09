@@ -8,8 +8,8 @@ BioFire Defense, LLC. If your PCR instrument is not licensed under these patents
 for sublicensing information.
 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
- * This file is subject to the terms and conditions defined on the dna-utah.org website and may not be used for external and/or commercial purposes without consent.
- *  [2024] dna-utah.org
+ * This file is subject to the terms and conditions defined on the dna-utah.org.
+ *  [2024] Zach Dwight
  *  All Rights Reserved.
 
 Future Feature List:
